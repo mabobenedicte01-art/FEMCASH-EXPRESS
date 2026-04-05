@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Stores user-specific settings and profile information.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique identifier for the user." },
+        "displayName": { "type": "string", "description": "The user's full name." },
+        "email": { "type": "string", "format": "email", "description": "The user's email address." },
+        "role": { "type": "string", "enum": ["admin", "user"], "description": "The user's role in the application." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the profile was created." }
+      },
+      "required": ["uid", "displayName", "email", "role"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Represents a product in the entrepreneur's catalog.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique product ID." },
+        "name": { "type": "string", "description": "Name of the product." },
+        "price": { "type": "number", "description": "Price in FCFA." },
+        "stock": { "type": "integer", "description": "Current stock level." },
+        "salesCount": { "type": "integer", "description": "Total number of units sold." },
+        "ownerId": { "type": "string", "description": "The UID of the entrepreneur who owns this product." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the product was added." }
+      },
+      "required": ["name", "price", "stock", "ownerId"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Represents a sale or transaction.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique order ID." },
+        "customerName": { "type": "string", "description": "Name of the customer." },
+        "amount": { "type": "number", "description": "Total amount of the sale." },
+        "status": { "type": "string", "enum": ["pending", "completed", "cancelled"], "description": "Current status of the order." },
+        "ownerId": { "type": "string", "description": "The UID of the entrepreneur who made the sale." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the sale occurred." }
+      },
+      "required": ["amount", "ownerId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "UserProfile",
+      "description": "User profile documents."
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Collection of all products."
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Collection of all sales/orders."
+    }
+  }
+}
