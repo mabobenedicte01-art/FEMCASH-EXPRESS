@@ -223,7 +223,7 @@ const Hero = ({ onStartClick, onHowItWorksClick }: { onStartClick: () => void, o
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <button onClick={onStartClick} className="btn-primary flex items-center justify-center gap-2">
-                Créer mon compte <ArrowRight size={20} />
+                Crée ton compte <ArrowRight size={20} />
               </button>
               <button onClick={onHowItWorksClick} className="btn-secondary">
                 Voir comment ça marche
@@ -1022,7 +1022,7 @@ const AJDESection = ({ onJoinClick }: { onJoinClick: () => void }) => {
 // --- Main App ---
 
 export default function App() {
-  const [view, setView] = useState<'landing' | 'dashboard'>('landing');
+  const [view, setView] = useState<'landing' | 'dashboard' | 'register'>('landing');
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
@@ -1069,8 +1069,9 @@ export default function App() {
     };
   }, []);
 
-  const scrollToRegister = () => {
-    document.getElementById("register")?.scrollIntoView({ behavior: 'smooth' });
+  const navigateToRegister = () => {
+    setView('register');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const scrollToCommunity = () => {
@@ -1099,7 +1100,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen selection:bg-accent selection:text-white">
-      <Navbar onStartClick={scrollToRegister} view={view} setView={setView} userProfile={userProfile} />
+      <Navbar onStartClick={navigateToRegister} view={view} setView={setView} userProfile={userProfile} />
       
       <main>
         <AnimatePresence mode="wait">
@@ -1111,7 +1112,7 @@ export default function App() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Hero onStartClick={scrollToRegister} onHowItWorksClick={scrollToHowItWorks} />
+              <Hero onStartClick={navigateToRegister} onHowItWorksClick={scrollToHowItWorks} />
               
               <section id="services">
                 <div className="py-24 bg-gray-50">
@@ -1168,7 +1169,7 @@ export default function App() {
                         <p className="text-gray-300 text-lg mb-10 leading-relaxed">
                           Plus besoin de cahiers ou de calculatrices compliquées. FEMCASH EXPRESS centralise toutes vos données pour vous donner une vision claire de votre succès.
                         </p>
-                        <button onClick={scrollToRegister} className="btn-primary">
+                        <button onClick={navigateToRegister} className="btn-primary">
                           Tester gratuitement
                         </button>
                       </div>
@@ -1339,15 +1340,6 @@ export default function App() {
                 </div>
               </section>
 
-              <AJDESection onJoinClick={joinAJDE} />
-
-              {!userProfile && (
-                <section id="register-section" ref={registerRef}>
-                  <RegistrationForm />
-                </section>
-              )}
-
-
               <section className="py-24">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                   <motion.div 
@@ -1362,13 +1354,27 @@ export default function App() {
                     <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto relative z-10">
                       Rejoins des milliers de femmes entrepreneures qui ont déjà sauté le pas vers la réussite financière.
                     </p>
-                    <button onClick={scrollToRegister} className="bg-white text-primary px-10 py-4 rounded-[30px] font-bold text-lg hover:scale-105 transition-transform shadow-xl relative z-10">
-                      Créer mon compte
+                    <button onClick={navigateToRegister} className="bg-white text-primary px-10 py-4 rounded-[30px] font-bold text-lg hover:scale-105 transition-transform shadow-xl relative z-10">
+                      Crée ton compte
                     </button>
                   </motion.div>
                 </div>
               </section>
+
+              <AJDESection onJoinClick={joinAJDE} />
               
+              <Footer />
+            </motion.div>
+          ) : view === 'register' ? (
+            <motion.div
+              key="register"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.5 }}
+              className="pt-20"
+            >
+              <RegistrationForm />
               <Footer />
             </motion.div>
           ) : (
